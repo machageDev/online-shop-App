@@ -1,5 +1,6 @@
 from pyexpat.errors import messages
 from django.shortcuts import redirect, render
+from django.contrib.auth import authenticate, login
 
 from UrbanFit.models import User
 
@@ -7,7 +8,19 @@ from UrbanFit.models import User
 
 
 def login_view(request):
-    return render(request, 'login.html')  # or 'UrbanFit/login.html' if inside app folder
+    if request.method == "POST":
+        first_name = request.POST.get('first_name')
+        password = request.POST.get('password')
+        user = authenticate(request, username=first_name, password=password)
+        
+        if user is not None:
+            login(request,user)
+            return redirect('dashbaord')
+        else:
+            return render(request,"login.html",{"error":"invalid credential"})
+        return render(request,"login.html")
+            
+    
 def navbar(request):
     return render(request,'navbar.html')
 def home(request):
