@@ -17,6 +17,7 @@ def login_view(request):
             login(request,user)
             return redirect('dashbaord')
         else:
+            messages.error(request,"invalid credentialsa")
             return render(request,"login.html",{"error":"invalid credential"})
         return render(request,"login.html")
             
