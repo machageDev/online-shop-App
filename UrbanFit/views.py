@@ -53,22 +53,26 @@ def register(request):
         return redirect('login')
     return render(request,'register.html')
         
-        
-
 def product_listing(request):
+    # Initialize filters with default values
+    category_filter = request.GET.get('category', None)
+    size_filter = request.GET.get('size', None)
+    color_filter = request.GET.get('color', None)
+    sort_by = request.GET.get('sort_by', 'name')  # default sorting by name
+    
     products = Product.objects.all()
-    category_filter = request.GET.get('category')
+    
+    # Apply filters
     if category_filter:
         products = products.filter(category=category_filter)
-        size_filter = request.GET.get('size')
-        if size_filter:
-            products = products.filter(size=size_filter)
-            
-            color_filter = request. GET.get('color')
-            if color_filter:
-                products = products.GET.get('color')
-                 # Sort products
-    sort_by = request.GET.get('sort_by', 'name')  # default sorting by name
+    
+    if size_filter:
+        products = products.filter(size=size_filter)
+    
+    if color_filter:
+        products = products.filter(color=color_filter)
+    
+    # Apply sorting
     if sort_by == 'price':
         products = products.order_by('price')
     elif sort_by == 'newest':
