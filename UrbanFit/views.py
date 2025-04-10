@@ -1,6 +1,8 @@
 from pyexpat.errors import messages
 from django.shortcuts import redirect, render
 from django.contrib.auth import authenticate, login
+from .models import Product
+from django.core.paginator import Paginator
 
 from UrbanFit.models import User
 
@@ -52,4 +54,40 @@ def register(request):
     return render(request,'register.html')
         
         
+
+def product_listing(request):
+    products = Product.objects.all()
+    category_filter = request.GET.get('category')
+    if category_filter:
+        products = products.filter(category=category_filter)
+        size_filter = request.GET.get('size')
+        if size_filter:
+            products = products.filter(size=size_filter)
+            
+            color_filter = request. GET.get('color')
+            if color_filter:
+                products = products.GET.get('color')
+                 # Sort products
+    sort_by = request.GET.get('sort_by', 'name')  # default sorting by name
+    if sort_by == 'price':
+        products = products.order_by('price')
+    elif sort_by == 'newest':
+        products = products.order_by('-id')  # assuming id is based on creation date
+    elif sort_by == 'best-rated':
+        products = products.order_by('-rating')  # assuming there's a 'rating' field
     
+    # Pagination
+    paginator = Paginator(products, 9)  # Show 9 products per page
+    page = request.GET.get('page')
+    paginated_products = paginator.get_page(page)
+    
+    context = {
+        'products': paginated_products,
+        'category_filter': category_filter,
+        'size_filter': size_filter,
+        'color_filter': color_filter,
+        'sort_by': sort_by,
+    }
+    
+    return render(request, 'product_listing.html', context)
+                
