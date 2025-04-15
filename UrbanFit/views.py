@@ -2,12 +2,14 @@ from pyexpat.errors import messages
 import random
 from django.shortcuts import redirect, render
 from django.contrib.auth import authenticate, login
-
+from django.contrib.auth.decorators import login_required
 from Eshop import settings
 from .models import Product
 from django.core.paginator import Paginator
-
 from UrbanFit.models import User
+from django.contrib.auth import get_user_model
+from django.core.mail import send_mail
+from django.contrib.auth.tokens import default_token_generator
 
 # Create your views here.
 
