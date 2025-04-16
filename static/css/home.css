@@ -1,13 +1,13 @@
 /* General styling */
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: #f8f9fa;
+    background-color: blanchedalmond;
     color: #333;
 }
 
 /* About Section */
 #about {
-    background-color: #ffffff;
+    background-color:black;
     padding: 60px 20px;
     border-radius: 10px;
     box-shadow: 0 0 15px rgba(0, 0, 0, 0.05);
