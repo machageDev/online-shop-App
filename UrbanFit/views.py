@@ -57,7 +57,7 @@ def register(request):
         messages.success(request,"user registered successfully")
         return redirect('login')
     return render(request,'register.html')
-@login_required        
+       
 def product_listing(request):
     # Initialize filters with default values
     category_filter = request.GET.get('category', None)
