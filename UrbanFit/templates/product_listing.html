@@ -1,1 +1,95 @@
 {%extends 'base.html'%}
+{%load  static %}
+<link href ={%static 'css/product.css '%} rel = "stylesheet">
+{% block title %}Product Listing{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <h2 class="mb-4">Products</h2>
+
+    <!-- Filter & Sort Form -->
+    <form method="get" class="row g-3 mb-4">
+        <div class="col-md-3">
+            <select name="category" class="form-select">
+                <option value="">All Categories</option>
+                <option value="clothing" {% if category_filter == 'clothing' %}selected{% endif %}>Clothing</option>
+                <option value="shoes" {% if category_filter == 'shoes' %}selected{% endif %}>Shoes</option>
+                <option value="accessories" {% if category_filter == 'accessories' %}selected{% endif %}>Accessories</option>
+            </select>
+        </div>
+
+        <div class="col-md-2">
+            <select name="size" class="form-select">
+                <option value="">All Sizes</option>
+                <option value="S" {% if size_filter == 'S' %}selected{% endif %}>S</option>
+                <option value="M" {% if size_filter == 'M' %}selected{% endif %}>M</option>
+                <option value="L" {% if size_filter == 'L' %}selected{% endif %}>L</option>
+            </select>
+        </div>
+
+        <div class="col-md-2">
+            <select name="color" class="form-select">
+                <option value="">All Colors</option>
+                <option value="red" {% if color_filter == 'red' %}selected{% endif %}>Red</option>
+                <option value="blue" {% if color_filter == 'blue' %}selected{% endif %}>Blue</option>
+                <option value="black" {% if color_filter == 'black' %}selected{% endif %}>Black</option>
+            </select>
+        </div>
+
+        <div class="col-md-3">
+            <select name="sort_by" class="form-select">
+                <option value="name" {% if sort_by == 'name' %}selected{% endif %}>Sort by Name</option>
+                <option value="price" {% if sort_by == 'price' %}selected{% endif %}>Sort by Price</option>
+                <option value="newest" {% if sort_by == 'newest' %}selected{% endif %}>Newest</option>
+                <option value="best-rated" {% if sort_by == 'best-rated' %}selected{% endif %}>Best Rated</option>
+            </select>
+        </div>
+
+        <div class="col-md-2">
+            <button type="submit" class="btn btn-primary w-100">Apply</button>
+        </div>
+    </form>
+
+    <!-- Product Grid -->
+    <div class="row">
+        {% for product in products %}
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 shadow-sm">
+                <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.name }}" style="height: 250px; object-fit: cover;">
+                <div class="card-body">
+                    <h5 class="card-title">{{ product.name }}</h5>
+                    <p class="card-text">{{ product.description|truncatechars:100 }}</p>
+                    <p class="fw-bold text-primary">Ksh {{ product.price }}</p>
+                    <a href="{% url 'product_detail' product.id %}" class="btn btn-sm btn-outline-primary">View</a>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <p>No products found.</p>
+        {% endfor %}
+    </div>
+
+    <!-- Pagination -->
+    <div class="mt-4 d-flex justify-content-center">
+        <nav>
+            <ul class="pagination">
+                {% if products.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ products.previous_page_number }}&category={{ category_filter }}&size={{ size_filter }}&color={{ color_filter }}&sort_by={{ sort_by }}">Previous</a>
+                    </li>
+                {% endif %}
+                {% for page_num in products.paginator.page_range %}
+                    <li class="page-item {% if products.number == page_num %}active{% endif %}">
+                        <a class="page-link" href="?page={{ page_num }}&category={{ category_filter }}&size={{ size_filter }}&color={{ color_filter }}&sort_by={{ sort_by }}">{{ page_num }}</a>
+                    </li>
+                {% endfor %}
+                {% if products.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ products.next_page_number }}&category={{ category_filter }}&size={{ size_filter }}&color={{ color_filter }}&sort_by={{ sort_by }}">Next</a>
+                    </li>
+                {% endif %}
+            </ul>
+        </nav>
+    </div>
+</div>
+{% endblock %}

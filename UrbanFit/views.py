@@ -144,4 +144,8 @@ def reset_password(request):
         messages.error(request, 'Error resetting password.')
 
     return render(request, 'reset_password.html')        
-                 
+
+def profile(request):
+    if request.user.is_authenticated:
+        return render(request,'profile.html',{'user':request.user})
+        
